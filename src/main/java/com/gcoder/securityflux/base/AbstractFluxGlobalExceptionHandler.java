@@ -13,12 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 @Log4j2
 public abstract class AbstractFluxGlobalExceptionHandler implements ErrorWebExceptionHandler {
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private final Map<Class<? extends Throwable>, Integer> exceptionHttpStatusMap = new HashMap<>();
+    private final ObjectMapper objectMapper;
+    private final Map<Class<? extends Throwable>, Integer> exceptionHttpStatusMap;
 
-    protected AbstractFluxGlobalExceptionHandler addException(Class<? extends Throwable> exception, int code){
-        exceptionHttpStatusMap.put(exception, code);
-        return this;
+    public AbstractFluxGlobalExceptionHandler(){
+        objectMapper = new ObjectMapper();
+        exceptionHttpStatusMap = new HashMap<>();
+        addException(exceptionHttpStatusMap);
     }
 
     @Override
@@ -36,5 +37,6 @@ public abstract class AbstractFluxGlobalExceptionHandler implements ErrorWebExce
         }
     }
 
-    public abstract Object makeBodyString(Throwable ex);
+    protected abstract Object makeBodyString(Throwable ex);
+    protected abstract void addException( Map<Class<? extends Throwable>, Integer> exceptionHttpStatusMap);
 }
